@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lugx Gaming - Shop Page{% endblock %}
+{% block navigation %}
+<li><a href="{% url 'home' %}">Home</a></li>
+<li><a href="{% url 'shop' %}" class='active'>Our Shop</a></li>
+<li><a href="{% url 'contact' %}">Contact Us</a></li>
+<li><a href="#">Sign In</a></li>
+{% endblock %} 
+{% block header %}
+<div class="page-heading header-text">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-12">
+              {% block page_heading %}
+                <h3>Our shop</h3>
+              {% endblock %}
+              <span class="breadcrumb">
+                  <a href="#">Home</a> {% block breadcrumb_sep %}> {% endblock %}
+                  {% block breadcrumb %}Our shop{% endblock %}
+              </span>
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock header %}
+{% block content %}
+<div class="section trending">
+  <div class="container">
+    <ul class="trending-filter">
+      <li>
+        <a {% if not selected_genre %}class="is_active" {% endif %}href="{% url 'shop' %}">Show All</a>
+      </li>
+      {% for genre in genres %}
+      <li>
+        <a {% if selected_genre == genre.name %}class="is_active"{% endif %} href="{% url 'shop' %}?genre={{ genre.name }}">{{ genre.name }}</a>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="row trending-box">
+      {% for game in games %}
+      <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 {% for genre in game.genres.all %}{{ genre }} {% endfor %}">
+        <div class="item">
+          <div class="thumb">
+            <a href="{% url 'product-details' game.id%}"><img src="{{ game.image.url }}" alt=""></a>
+            {% if game.price == 0.00 %}
+            <span class="price">FREE TO PLAY</span>
+            {% else %}
+              <span class="price">
+                {% if game.discount_price %}
+                  <em>${{ game.price }}</em>${{ game.discount_price }}
+                {% else %}
+                  ${{ game.price }}
+                {% endif %}
+              </span>
+            {% endif %}
+          </div>
+          <div class="down-content">
+            {% for genre in game.genres.all %}
+            <span class="category">{{ genre }}</span>
+            {% endfor %}
+            <h4>{{ game.title }}</h4>
+            <a href="#"><i class="fa fa-shopping-bag"></i></a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>    
+    <div class="row">
+      <div class="col-lg-12">
+        <ul class="pagination">
+        <li><a href="#"> &lt; </a></li>
+          <li><a href="#">1</a></li>
+          <li><a class="is_active" href="#">2</a></li>
+          <li><a href="#">3</a></li>
+          <li><a href="#"> &gt; </a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
